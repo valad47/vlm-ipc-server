@@ -86,6 +86,10 @@ int vlm_epoll_add(lua_State *L) {
 int vlm_accept_client(lua_State *L) {
     int sock = luaL_checkinteger(L, 1);
     int connection = accept(sock, NULL, NULL);
+    struct timeval timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    setsockopt(connection, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
 
     lua_pushinteger(L, connection);
     return 1;
